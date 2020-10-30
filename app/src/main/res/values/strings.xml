@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Schoo lAnnouncements App</string>
+    <string name="app_name">HSS Daily Announcements</string>
+    <string name="title">HSS Daily Announcements</string>
 </resources>
