@@ -1,4 +1,4 @@
-package com.example.hssdailyannouncements;
+package com.example.hssdailyannouncements.utils;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -7,6 +7,8 @@ import android.util.Log;
 import com.downloader.Error;
 import com.downloader.OnDownloadListener;
 import com.downloader.PRDownloader;
+import com.example.hssdailyannouncements.MainActivity;
+import com.example.hssdailyannouncements.fragments.AnnoucementsFragment;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -20,7 +22,7 @@ public class DownloadAnnouncements extends AsyncTask<Context, Void, File> {
     String webpageUrl = "https://www.sd48howesound.org/apps/pages/index.jsp?uREC_ID=1094706&type=d&pREC_ID=1369697";
     String outDir;
     String PDFUrl;
-    String fileName = "annoucements.pdf";
+    String fileName = "announcements.pdf";
     File pdf;
     Boolean downloadFailure = false;
 
@@ -30,7 +32,7 @@ public class DownloadAnnouncements extends AsyncTask<Context, Void, File> {
         outDir = context.getCacheDir().toString();
 
         try {
-            //load the hss daily annoucement webpage
+            //load the hss daily announcement webpage
             Document doc = Jsoup.connect(webpageUrl).get();
             //get the link elements by getting elements with class
             Elements links = doc.select(".attachment-type-pdf");
@@ -84,6 +86,6 @@ public class DownloadAnnouncements extends AsyncTask<Context, Void, File> {
     protected void onPostExecute(File file) {
         super.onPostExecute(file);
 
-        MainActivity.showAnnouncements(file, context);
+        AnnoucementsFragment.showAnnouncements(file, context);
     }
 }

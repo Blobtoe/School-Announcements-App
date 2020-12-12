@@ -1,62 +1,61 @@
 package com.example.hssdailyannouncements;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
+import android.view.MenuItem;
+import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
-import com.github.barteksc.pdfviewer.PDFView;
+import com.example.hssdailyannouncements.fragments.AnnoucementsFragment;
+import com.example.hssdailyannouncements.fragments.CalendarFragment;
+import com.example.hssdailyannouncements.utils.DayViewAdapter;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.io.File;
+public class MainActivity extends AppCompatActivity{
 
-public class MainActivity extends AppCompatActivity {
-
-    static PDFView pdfView;
-    static SwipeRefreshLayout swipeRefreshLayout;
+    BottomNavigationView bottomNav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        bottomNav = findViewById(R.id.bottomNav);
 
-        //get the UI elements
-        pdfView = findViewById(R.id.pdfView);
-        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        //Start the announcements fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        AnnoucementsFragment annoucementsFragment = new AnnoucementsFragment();
+        fragmentTransaction.replace(R.id.main_content, annoucementsFragment);
+        fragmentTransaction.commit();
 
-        //re-download and show latest announcement on refresh
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        bottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onRefresh() {
-                //download the latest announcement pdf
-                new DownloadAnnouncements().execute(getApplicationContext());
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                //Start the announcements fragment
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+                switch (item.getItemId()) {
+                    //if the announcements button is pressed
+                    case R.id.announcements_button:
+                        AnnoucementsFragment annoucementsFragment = new AnnoucementsFragment();
+                        fragmentTransaction.replace(R.id.main_content, annoucementsFragment);
+                        fragmentTransaction.commit();
+                        break;
+
+                    // if the calendar button is pressed
+                    case R.id.calendar_button:
+                        CalendarFragment calendarFragment = new CalendarFragment();
+                        fragmentTransaction.replace(R.id.main_content, calendarFragment);
+                        fragmentTransaction.commit();
+                        break;
+                }
+                return true;
             }
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        //download the latest announcement pdf
-        new DownloadAnnouncements().execute(getApplicationContext());
-    }
-
-    //show the announcements from the pdf file
-    public static void showAnnouncements(File file, Context context) {
-        //stop the refreshing animation on the swipe layout
-        swipeRefreshLayout.setRefreshing(false);
-
-        //if the download was unsuccessful
-        if (file == null) {
-            Toast.makeText(context, "Failed to fetch latest announcements.", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        //show the pdf
-        pdfView.fromFile(file).load();
-        Log.d("log", "DOWNLOADED NEW PDF");
     }
 }
