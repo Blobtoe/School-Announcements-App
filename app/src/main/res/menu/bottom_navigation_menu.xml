@@ -8,5 +8,11 @@
         android:id="@+id/calendar_button"
         android:enabled="true"
         android:icon="@drawable/ic_calendar_today_24px"
-        android:title="Calendar" />
+        android:title="Calendar"/>
+    <!--
+    <item
+        android:id="@+id/cafe_button"
+        android:enabled="true"
+        android:icon="@drawable/ic_restaurant_white_24dp"
+        android:title="Cafe"/> -->
 </menu>

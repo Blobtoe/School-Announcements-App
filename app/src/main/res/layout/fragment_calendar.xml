@@ -9,7 +9,7 @@
         android:id="@+id/today_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:background="@color/blue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -84,7 +84,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             app:layout_constraintTop_toBottomOf="@+id/today_container"
-            tools:itemCount="10"></androidx.recyclerview.widget.RecyclerView>
+            tools:itemCount="4"></androidx.recyclerview.widget.RecyclerView>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

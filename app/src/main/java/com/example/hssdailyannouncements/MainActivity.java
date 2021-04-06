@@ -2,6 +2,7 @@ package com.example.hssdailyannouncements;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.HapticFeedbackConstants;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -12,7 +13,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.hssdailyannouncements.fragments.AnnoucementsFragment;
 import com.example.hssdailyannouncements.fragments.CalendarFragment;
-import com.example.hssdailyannouncements.utils.DayViewAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity{
@@ -40,11 +40,12 @@ public class MainActivity extends AppCompatActivity{
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
                 switch (item.getItemId()) {
-                    //if the announcements button is pressed
+                    // if the announcements button is pressed
                     case R.id.announcements_button:
                         AnnoucementsFragment annoucementsFragment = new AnnoucementsFragment();
                         fragmentTransaction.replace(R.id.main_content, annoucementsFragment);
                         fragmentTransaction.commit();
+                        bottomNav.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
                         break;
 
                     // if the calendar button is pressed
@@ -52,7 +53,17 @@ public class MainActivity extends AppCompatActivity{
                         CalendarFragment calendarFragment = new CalendarFragment();
                         fragmentTransaction.replace(R.id.main_content, calendarFragment);
                         fragmentTransaction.commit();
+                        bottomNav.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
                         break;
+
+                        /*
+                    // if the cafe button is pressed
+                    case R.id.cafe_button:
+                        CafeFragment cafeFragment = new CafeFragment();
+                        fragmentTransaction.replace(R.id.main_content, cafeFragment);
+                        fragmentTransaction.commit();
+                        bottomNav.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+                        break; */
                 }
                 return true;
             }

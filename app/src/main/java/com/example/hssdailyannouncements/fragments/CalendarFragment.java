@@ -2,6 +2,7 @@ package com.example.hssdailyannouncements.fragments;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Handler;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -42,6 +43,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.chrono.ChronoLocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -57,8 +59,9 @@ import okhttp3.Response;
 
 public class CalendarFragment extends Fragment implements DayViewAdapter.ItemClickListener, EventViewAdapter.ItemClickListener{
 
-    String start_date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date(System.currentTimeMillis() + 30 * 1000 * 60 * 60 * 24)); //date 30 days ago
-    String APIKEY = "";
+    //String start_date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date(System.currentTimeMillis() + 60 * 86400000)); //date 30 days ago
+    String start_date = LocalDate.now().minusDays(30).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); //date 30 days ago
+    String APIKEY = "AIzaSyCEw_j9_X5gGoe91x4Q0LUKyLT7JRCRdC4";
     String REQUESTURL = "https://www.googleapis.com/calendar/v3/calendars/howesoundsecondaryschool@gmail.com/events?key=" + APIKEY + "&timeMin=" + start_date + "T00:00:00-00:00&orderBy=startTime&singleEvents=true";
     File calendarFile;
     SwipeRefreshLayout swipeRefreshLayout;
@@ -74,8 +77,6 @@ public class CalendarFragment extends Fragment implements DayViewAdapter.ItemCli
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_calendar, container, false);
-
-        Log.d("debug", REQUESTURL);
 
         calendarFile = new File(getContext().getCacheDir(), "calendar.json");
 
@@ -107,6 +108,7 @@ public class CalendarFragment extends Fragment implements DayViewAdapter.ItemCli
     //shows every day in the list in a recycler view
     //days are passed to {DayViewAdapter}
     void showSchedule(List<CalendarDay> days) {
+        //if the first item in the days list is today
         if (days.get(0).date.isEqual(LocalDate.now())) {
             CalendarDay today = days.get(0);
             days.remove(0);
@@ -178,64 +180,55 @@ public class CalendarFragment extends Fragment implements DayViewAdapter.ItemCli
 
         try {
             //read the json file
-            JsonArray items = new JsonParser().parse(new FileReader(calendarFile)).getAsJsonArray();
+            JsonArray events = new JsonParser().parse(new FileReader(calendarFile)).getAsJsonArray();
 
-            //set the first event and first day
-            CalendarEvent lastEvent = null;
+            CalendarEvent previousEvent = null;
+            String blockRotation = null;
             CalendarDay day = null;
-            for (JsonElement item : items){
-                lastEvent = new CalendarEvent(item.getAsJsonObject());
-                if (lastEvent.name != null) {
-                    day = new CalendarDay(lastEvent.startDate);
-                    break;
-                }
-            }
 
-            //iterate over every item
-            String blockRotation = "";
-            for (JsonElement item : items) {
-                CalendarEvent event;
-
+            for (JsonElement item: events) {
                 try {
                     //create new day object from item
-                    event = new CalendarEvent(item.getAsJsonObject());
+                    CalendarEvent event = new CalendarEvent(item.getAsJsonObject());
+
+                    //change the block rotationif the event if it contains the word rotation
+                    if (event.name.contains("Rotation")) {
+                        blockRotation = event.name;
+                    }
+                    else {
+                        //skip the event if it has no name
+                        if (event.name != null) {
+                            //set previous event and day during the first loop
+                            if (previousEvent == null) {
+                                previousEvent = event;
+                                day = new CalendarDay(event.startDate);
+                                day.events.add(event);
+                            }
+                            else {
+                                if (event.startDate.isAfter(previousEvent.startDate)) {
+                                    if (day.date.isAfter(LocalDate.now()) || day.date.isEqual(LocalDate.now())) {
+                                        if (day.date.isEqual(LocalDate.now())) {
+                                            day.isToday = true;
+                                        }
+                                        days.add(day);
+                                    }
+                                    day = new CalendarDay(event.startDate);
+                                    day.blockRotation = blockRotation;
+                                }
+                                day.events.add(event);
+                                previousEvent = event;
+                            }
+                        }
+                    }
                 }
                 catch (Exception e) {
                     //if we fail, skip the event
                     e.printStackTrace();
                     continue;
                 }
-
-                //skip the event if it has no name
-                if (event.name == null) {
-                    continue;
-                }
-                //skip the event if it contains the word rotation
-                if (event.name.contains("Rotation") && event.startDate.isBefore(LocalDate.now())) {
-                    Log.d("debug", event.startDate.toString());
-                    blockRotation = event.name;
-                    continue;
-                }
-
-                //if this events date is after the last events
-                if (event.startDate.isAfter(lastEvent.startDate)) {
-                    day.blockRotation = blockRotation;
-
-                    if (day.date.isBefore(LocalDate.now()) == false) {
-                        //add this day to the days list
-                        days.add(day);
-                    }
-                    //create a new day object
-                    day = new CalendarDay(event.startDate);
-                }
-
-
-
-                //add this day to the current day
-                day.events.add(event);
-
-                lastEvent = event;
+                
             }
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             days = null;
