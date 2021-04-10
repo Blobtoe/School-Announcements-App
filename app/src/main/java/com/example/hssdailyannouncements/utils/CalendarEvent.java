@@ -1,11 +1,8 @@
 package com.example.hssdailyannouncements.utils;
 
-import android.util.Log;
-
 import com.google.gson.JsonObject;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 

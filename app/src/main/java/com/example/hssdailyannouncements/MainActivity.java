@@ -1,10 +1,8 @@
 package com.example.hssdailyannouncements;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;

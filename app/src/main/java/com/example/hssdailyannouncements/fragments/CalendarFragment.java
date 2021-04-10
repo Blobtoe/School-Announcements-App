@@ -1,34 +1,26 @@
 package com.example.hssdailyannouncements.fragments;
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.Handler;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.hssdailyannouncements.MainActivity;
 import com.example.hssdailyannouncements.R;
 import com.example.hssdailyannouncements.utils.CalendarDay;
 import com.example.hssdailyannouncements.utils.CalendarEvent;
 import com.example.hssdailyannouncements.utils.DayViewAdapter;
-import com.example.hssdailyannouncements.utils.DownloadAnnouncements;
 import com.example.hssdailyannouncements.utils.EventViewAdapter;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -38,16 +30,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -60,8 +46,8 @@ import okhttp3.Response;
 public class CalendarFragment extends Fragment implements DayViewAdapter.ItemClickListener, EventViewAdapter.ItemClickListener{
 
     //String start_date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date(System.currentTimeMillis() + 60 * 86400000)); //date 30 days ago
-    String start_date = LocalDate.now().minusDays(30).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); //date 30 days ago
-    String APIKEY = "AIzaSyCEw_j9_X5gGoe91x4Q0LUKyLT7JRCRdC4";
+    String start_date = LocalDate.now().minusDays(150).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); //date 30 days ago
+    String APIKEY = getResources().getString(R.string.google_calendar_key);
     String REQUESTURL = "https://www.googleapis.com/calendar/v3/calendars/howesoundsecondaryschool@gmail.com/events?key=" + APIKEY + "&timeMin=" + start_date + "T00:00:00-00:00&orderBy=startTime&singleEvents=true";
     File calendarFile;
     SwipeRefreshLayout swipeRefreshLayout;
@@ -77,6 +63,9 @@ public class CalendarFragment extends Fragment implements DayViewAdapter.ItemCli
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_calendar, container, false);
+
+        Log.d("debug", REQUESTURL);
+        Log.d("debug", start_date);
 
         calendarFile = new File(getContext().getCacheDir(), "calendar.json");
 
@@ -184,6 +173,7 @@ public class CalendarFragment extends Fragment implements DayViewAdapter.ItemCli
 
             CalendarEvent previousEvent = null;
             String blockRotation = null;
+            String blockRotationToday = null;
             CalendarDay day = null;
 
             for (JsonElement item: events) {
@@ -191,9 +181,13 @@ public class CalendarFragment extends Fragment implements DayViewAdapter.ItemCli
                     //create new day object from item
                     CalendarEvent event = new CalendarEvent(item.getAsJsonObject());
 
-                    //change the block rotationif the event if it contains the word rotation
+                    //change the block rotation if the event if it contains the word rotation
                     if (event.name.contains("Rotation")) {
                         blockRotation = event.name;
+                        //set todays block rotation until we pass today's date
+                        if (event.startDate.isBefore(LocalDate.now()) || event.startDate.isEqual(LocalDate.now())) {
+                            blockRotationToday = blockRotation;
+                        }
                     }
                     else {
                         //skip the event if it has no name
@@ -201,21 +195,26 @@ public class CalendarFragment extends Fragment implements DayViewAdapter.ItemCli
                             //set previous event and day during the first loop
                             if (previousEvent == null) {
                                 previousEvent = event;
-                                day = new CalendarDay(event.startDate);
-                                day.events.add(event);
+                                day = new CalendarDay(LocalDate.now());
+                                day.isToday = true;
+                                if (event.startDate.isEqual(day.date)) {
+                                    day.events.add(event);
+                                }
                             }
                             else {
-                                if (event.startDate.isAfter(previousEvent.startDate)) {
+                                if (event.startDate.isAfter(day.date)) {
                                     if (day.date.isAfter(LocalDate.now()) || day.date.isEqual(LocalDate.now())) {
                                         if (day.date.isEqual(LocalDate.now())) {
-                                            day.isToday = true;
+                                            day.blockRotation = blockRotationToday;
                                         }
                                         days.add(day);
                                     }
                                     day = new CalendarDay(event.startDate);
                                     day.blockRotation = blockRotation;
                                 }
-                                day.events.add(event);
+                                if (event.startDate.isEqual(day.date)) {
+                                    day.events.add(event);
+                                }
                                 previousEvent = event;
                             }
                         }
@@ -226,7 +225,6 @@ public class CalendarFragment extends Fragment implements DayViewAdapter.ItemCli
                     e.printStackTrace();
                     continue;
                 }
-                
             }
 
         } catch (FileNotFoundException e) {
