@@ -1,4 +1,4 @@
-package com.example.hssdailyannouncements.utils;
+package com.felixperron.hssapp.utils;
 
 import com.google.gson.JsonObject;
 

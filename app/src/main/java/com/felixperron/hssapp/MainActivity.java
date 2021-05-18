@@ -1,4 +1,4 @@
-package com.example.hssdailyannouncements;
+package com.felixperron.hssapp;
 
 import android.os.Bundle;
 import android.view.HapticFeedbackConstants;
@@ -9,8 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.hssdailyannouncements.fragments.AnnoucementsFragment;
-import com.example.hssdailyannouncements.fragments.CalendarFragment;
+import com.felixperron.hssapp.fragments.AnnoucementsFragment;
+import com.felixperron.hssapp.fragments.CalendarFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity{

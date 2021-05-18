@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         multiDexEnabled true
-        applicationId "com.example.schoolannouncementsapp"
+        applicationId "com.felixperron.hssapp"
         minSdkVersion 26
         targetSdkVersion 29
         versionCode 1

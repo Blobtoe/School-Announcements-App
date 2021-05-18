@@ -1,4 +1,4 @@
-package com.example.hssdailyannouncements.fragments;
+package com.felixperron.hssapp.fragments;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.hssdailyannouncements.R;
+import com.felixperron.hssapp.R;
 import com.github.barteksc.pdfviewer.PDFView;
 
 import org.jetbrains.annotations.NotNull;

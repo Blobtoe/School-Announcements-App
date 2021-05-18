@@ -1,4 +1,4 @@
-package com.example.hssdailyannouncements;
+package com.felixperron.hssapp;
 
 import android.content.Context;
 

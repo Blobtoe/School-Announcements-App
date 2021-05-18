@@ -1,4 +1,4 @@
-package com.example.hssdailyannouncements.utils;
+package com.felixperron.hssapp.utils;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

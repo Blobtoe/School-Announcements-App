@@ -1,4 +1,4 @@
-package com.example.hssdailyannouncements.utils;
+package com.felixperron.hssapp.utils;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.hssdailyannouncements.R;
+import com.felixperron.hssapp.R;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

@@ -1,4 +1,4 @@
-package com.example.hssdailyannouncements.utils;
+package com.felixperron.hssapp.utils;
 
 import android.content.Context;
 import android.util.Log;
@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.hssdailyannouncements.R;
+import com.felixperron.hssapp.R;
 
 import java.time.format.TextStyle;
 import java.util.List;

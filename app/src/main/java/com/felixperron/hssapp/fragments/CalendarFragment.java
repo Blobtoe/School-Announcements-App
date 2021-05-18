@@ -1,4 +1,4 @@
-package com.example.hssdailyannouncements.fragments;
+package com.felixperron.hssapp.fragments;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,11 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.hssdailyannouncements.R;
-import com.example.hssdailyannouncements.utils.CalendarDay;
-import com.example.hssdailyannouncements.utils.CalendarEvent;
-import com.example.hssdailyannouncements.utils.DayViewAdapter;
-import com.example.hssdailyannouncements.utils.EventViewAdapter;
+import com.felixperron.hssapp.R;
+import com.felixperron.hssapp.utils.CalendarDay;
+import com.felixperron.hssapp.utils.CalendarEvent;
+import com.felixperron.hssapp.utils.DayViewAdapter;
+import com.felixperron.hssapp.utils.EventViewAdapter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -47,8 +47,8 @@ public class CalendarFragment extends Fragment implements DayViewAdapter.ItemCli
 
     //String start_date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date(System.currentTimeMillis() + 60 * 86400000)); //date 30 days ago
     String start_date = LocalDate.now().minusDays(150).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); //date 30 days ago
-    String APIKEY = getResources().getString(R.string.google_calendar_key);
-    String REQUESTURL = "https://www.googleapis.com/calendar/v3/calendars/howesoundsecondaryschool@gmail.com/events?key=" + APIKEY + "&timeMin=" + start_date + "T00:00:00-00:00&orderBy=startTime&singleEvents=true";
+    String APIKEY;
+    String REQUESTURL;
     File calendarFile;
     SwipeRefreshLayout swipeRefreshLayout;
 
@@ -63,6 +63,9 @@ public class CalendarFragment extends Fragment implements DayViewAdapter.ItemCli
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_calendar, container, false);
+
+        APIKEY = getResources().getString(R.string.google_calendar_key);
+        REQUESTURL = "https://www.googleapis.com/calendar/v3/calendars/howesoundsecondaryschool@gmail.com/events?key=" + APIKEY + "&timeMin=" + start_date + "T00:00:00-00:00&orderBy=startTime&singleEvents=true";
 
         Log.d("debug", REQUESTURL);
         Log.d("debug", start_date);
