@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "645867838582",
+    "project_id": "hss-app-22a5f",
+    "storage_bucket": "hss-app-22a5f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:645867838582:android:7b1c356e0a8a9345a25357",
+        "android_client_info": {
+          "package_name": "com.felixperron.hssapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "645867838582-7nsn64cv91fkk4bpdm0rkp51l6uovkib.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAioGw83VW19EBzI68ABn2mDBMIZEIw0lQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "645867838582-7nsn64cv91fkk4bpdm0rkp51l6uovkib.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

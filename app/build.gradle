@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 29
@@ -22,9 +23,15 @@ android {
 
     buildTypes {
         release {
+            multiDexKeepFile file('multidex-config.txt')
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -40,10 +47,9 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     implementation 'com.github.barteksc:android-pdf-viewer:3.2.0-beta.1'
-    implementation 'com.mindorks.android:prdownloader:0.6.0'
     implementation 'org.jsoup:jsoup:1.13.1'
-    implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.squareup.okhttp3:mockwebserver:4.9.0'
     implementation 'com.google.code.gson:gson:2.8.6'
-    implementation "com.squareup:square:7.0.0.20201118"
+    implementation 'com.google.firebase:firebase-analytics:19.0.0'
+    implementation "androidx.multidex:multidex:2.0.1"
 }
