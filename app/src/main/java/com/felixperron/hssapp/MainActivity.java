@@ -1,17 +1,23 @@
 package com.felixperron.hssapp;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.HapticFeedbackConstants;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.felixperron.hssapp.fragments.AnnoucementsFragment;
 import com.felixperron.hssapp.fragments.CalendarFragment;
+import com.felixperron.hssapp.fragments.PrivacyNoticeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -66,5 +72,19 @@ public class MainActivity extends AppCompatActivity{
                 return true;
             }
         });
+
+        if (getSharedPreferences("PREFERENCES", MODE_PRIVATE).getBoolean("isFirstRun", true)) {
+            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+            alertBuilder.setMessage("This app uses Google Analytics to track the number of users using it. This information is solely used for analytics and is never sold or shared to anyone.");
+            alertBuilder.setTitle("Privacy Notice");
+            alertBuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    getSharedPreferences("PREFERENCES", MODE_PRIVATE).edit().putBoolean("isFirstRun", false).commit();
+                }
+            });
+            alertBuilder.setCancelable(false);
+            alertBuilder.create().show();
+        }
     }
 }
