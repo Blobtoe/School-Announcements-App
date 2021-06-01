@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.example.schoolannouncementsapp",
+  "applicationId": "com.felixperron.hssapp",
   "variantName": "processReleaseResources",
   "elements": [
     {
