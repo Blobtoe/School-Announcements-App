@@ -13,11 +13,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.felixperron.hssapp.fragments.AnnoucementsFragment;
 import com.felixperron.hssapp.fragments.CalendarFragment;
-import com.felixperron.hssapp.fragments.PrivacyNoticeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity{
 
