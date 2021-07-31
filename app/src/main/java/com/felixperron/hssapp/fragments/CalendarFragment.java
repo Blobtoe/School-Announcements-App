@@ -169,13 +169,14 @@ public class CalendarFragment extends Fragment implements DayViewAdapter.ItemCli
                 //parse response into a list of day objects
                 final List<CalendarDay> days = parseCalendar();
 
-                new Handler(getContext().getMainLooper()).post(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        showSchedule(days);
-                    }
-                });
+                if (getContext() != null) {
+                    new Handler(getContext().getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            showSchedule(days);
+                        }
+                    });
+                }
             }
 
             @Override
