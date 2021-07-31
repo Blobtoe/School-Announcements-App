@@ -78,6 +78,14 @@
         app:layout_constraintTop_toBottomOf="@+id/today_container">
 
 
+        <TextView
+            android:id="@+id/schedule_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:text="message"
+            android:textAlignment="center" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/schedule_container"
             android:layout_width="match_parent"

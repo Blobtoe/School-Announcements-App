@@ -100,30 +100,49 @@ public class CalendarFragment extends Fragment implements DayViewAdapter.ItemCli
     //shows every day in the list in a recycler view
     //days are passed to {DayViewAdapter}
     void showSchedule(List<CalendarDay> days) {
-        //if the first item in the days list is today
-        if (days.get(0).date.isEqual(LocalDate.now())) {
-            CalendarDay today = days.get(0);
-            days.remove(0);
+        TextView todayDate = view.findViewById(R.id.today_date);
+        todayDate.setText(LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault()) + " " + LocalDate.now().getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()) + " " + LocalDate.now().getDayOfMonth());
 
-            TextView todayDate = view.findViewById(R.id.today_date);
-            todayDate.setText(today.date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault()) + " " + today.date.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()) + " " + today.date.getDayOfMonth());
+        TextView ScheduleMessage = view.findViewById(R.id.schedule_message);
+        RecyclerView ScheduleContainer = view.findViewById((R.id.schedule_container));
+        TextView todayBlockRotation = view.findViewById(R.id.today_block_rotation);
 
-            TextView todayBlockRotation = view.findViewById(R.id.today_block_rotation);
-            todayBlockRotation.setText(today.blockRotation);
 
-            RecyclerView recyclerView = view.findViewById(R.id.today_events_container);
+        if (days.size() > 0) {
+            ScheduleMessage.setVisibility(View.INVISIBLE);
+            ScheduleContainer.setVisibility(View.VISIBLE);
+
+            //if the first item in the days list is today
+            if (days.get(0).date.isEqual(LocalDate.now())) {
+                CalendarDay today = days.get(0);
+                days.remove(0);
+
+                todayBlockRotation.setText(today.blockRotation);
+
+                RecyclerView recyclerView = view.findViewById(R.id.today_events_container);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                EventViewAdapter eventViewAdapter = new EventViewAdapter(getContext(), today.events);
+                eventViewAdapter.setClickListener(this);
+                recyclerView.setAdapter(eventViewAdapter);
+            }
+            else {
+                todayBlockRotation.setText("");
+            }
+
+            //start the recycler view
+            RecyclerView recyclerView = view.findViewById(R.id.schedule_container);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            EventViewAdapter eventViewAdapter = new EventViewAdapter(getContext(), today.events);
-            eventViewAdapter.setClickListener(this);
-            recyclerView.setAdapter(eventViewAdapter);
+            dayViewAdapter = new DayViewAdapter(getContext(), days);
+            dayViewAdapter.setClickListener(this);
+            recyclerView.setAdapter(dayViewAdapter);
         }
+        else {
+            ScheduleMessage.setVisibility(View.VISIBLE);
+            ScheduleContainer.setVisibility(View.INVISIBLE);
 
-        //start the recycler view
-        RecyclerView recyclerView = view.findViewById(R.id.schedule_container);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        dayViewAdapter = new DayViewAdapter(getContext(), days);
-        dayViewAdapter.setClickListener(this);
-        recyclerView.setAdapter(dayViewAdapter);
+            ScheduleMessage.setText("No Events");
+            todayBlockRotation.setText("");
+        }
 
         swipeRefreshLayout.setRefreshing(false);
     }
